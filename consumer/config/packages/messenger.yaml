@@ -1,0 +1,16 @@
+framework:
+    messenger:
+        transports:
+            consumer:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: federation.in
+                        type: direct
+                    queues:
+                        consumer.queue:
+                            binding_keys:
+                                - ''
+
+        routing:
+            App\Message\FederationMessage: consumer

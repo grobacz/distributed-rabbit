@@ -1,0 +1,21 @@
+framework:
+    messenger:
+        transports:
+            federation:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: federation.in
+                        type: direct
+                    queues:
+                        federation.in:
+                            binding_keys:
+                                - ''
+                failure_transport: failed
+
+            failed: 'doctrine://default?queue_name=failed'
+
+        failure_transport: failed
+
+        routing:
+            App\Message\FederationMessage: federation

@@ -1,0 +1,71 @@
+services:
+  rabbit1:
+    image: rabbitmq:3-management
+    hostname: rabbit1
+    container_name: rabbit1
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq/rabbit1/enabled_plugins:/etc/rabbitmq/enabled_plugins
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - rabbit-net
+
+  rabbit2:
+    image: rabbitmq:3-management
+    hostname: rabbit2
+    container_name: rabbit2
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    volumes:
+      - ./rabbitmq/rabbit2/enabled_plugins:/etc/rabbitmq/enabled_plugins
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - rabbit-net
+
+  setup:
+    image: curlimages/curl:latest
+    container_name: rabbitmq-setup
+    depends_on:
+      - rabbit1
+      - rabbit2
+    volumes:
+      - ./rabbitmq/setup:/setup
+    networks:
+      - rabbit-net
+    entrypoint: ["/bin/sh", "/setup/run.sh"]
+
+  producer:
+    build: ./producer
+    container_name: producer
+    depends_on:
+      - rabbit1
+    environment:
+      MESSENGER_TRANSPORT_DSN: amqp://guest:guest@rabbit1:5672/%2f
+    networks:
+      - rabbit-net
+
+  consumer:
+    build: ./consumer
+    container_name: consumer
+    depends_on:
+      - rabbit2
+    environment:
+      MESSENGER_TRANSPORT_DSN: amqp://guest:guest@rabbit2:5672/%2f
+    volumes:
+      - consumer-log:/app/var/log
+    networks:
+      - rabbit-net
+
+networks:
+  rabbit-net:
+    driver: bridge
+
+volumes:
+  consumer-log:
