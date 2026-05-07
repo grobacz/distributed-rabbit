@@ -3,14 +3,6 @@ kind: Kustomization
 namespace: distributed-rabbit
 resources:
   - namespace.yaml
-  - enabled-plugins-configmap.yaml
-  - rabbitmq-secret.yaml
-  - rabbit1-deployment.yaml
-  - rabbit1-service.yaml
-  - rabbit2-deployment.yaml
-  - rabbit2-service.yaml
-  - setup-configmap.yaml
-  - setup-job.yaml
   - producer-configmap.yaml
   - producer-deployment.yaml
   - consumer-configmap.yaml

@@ -4,3 +4,4 @@ namespace: distributed-rabbit
 resources:
   - ../../base
   - ingress.yaml
+  - rabbitmq/

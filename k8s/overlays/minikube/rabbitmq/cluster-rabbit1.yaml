@@ -1,0 +1,26 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: rabbit1
+  namespace: distributed-rabbit
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  replicas: 1
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "512Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+  rabbitmq:
+    additionalConfig: |
+      management.path_prefix = /rabbit1
+      loopback_users = none
+      default_user = guest
+      default_pass = guest
+    additionalPlugins:
+      - rabbitmq_management
+      - rabbitmq_federation
+      - rabbitmq_federation_management
