@@ -23,6 +23,9 @@ spec:
           envFrom:
             - configMapRef:
                 name: producer-config
+          volumeMounts:
+            - name: log-volume
+              mountPath: /app/var/log
           resources:
             requests:
               memory: "128Mi"
@@ -30,3 +33,25 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "200m"
+
+        - name: confirmation-consumer
+          image: producer:latest
+          imagePullPolicy: Never
+          command: ["php", "bin/console", "messenger:consume", "confirmation", "-vv"]
+          envFrom:
+            - configMapRef:
+                name: producer-config
+          volumeMounts:
+            - name: log-volume
+              mountPath: /app/var/log
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+
+      volumes:
+        - name: log-volume
+          emptyDir: {}

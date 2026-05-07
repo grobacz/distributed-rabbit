@@ -4,8 +4,14 @@ resources:
   - cluster-rabbit1.yaml
   - cluster-rabbit2.yaml
   - exchange-federation-in.yaml
+  - exchange-federation-out.yaml
   - queue-consumer.yaml
+  - queue-response.yaml
   - binding-consumer.yaml
+  - binding-response.yaml
   - federation-upstream.yaml
+  - federation-upstream-rabbit2.yaml
   - federation-policy.yaml
+  - federation-policy-out.yaml
   - rabbitmq-secret.yaml
+  - rabbitmq-secret-rabbit2.yaml

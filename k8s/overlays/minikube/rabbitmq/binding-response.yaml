@@ -1,0 +1,14 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Binding
+metadata:
+  name: response-binding
+  namespace: distributed-rabbit
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  source: federation.out
+  destination: response.queue
+  destinationType: queue
+  routingKey: ""
+  rabbitmqClusterReference:
+    name: rabbit1

@@ -1,0 +1,12 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Queue
+metadata:
+  name: response-queue
+  namespace: distributed-rabbit
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  name: response.queue
+  durable: true
+  rabbitmqClusterReference:
+    name: rabbit1

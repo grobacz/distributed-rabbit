@@ -13,6 +13,17 @@ framework:
                                 - ''
                 failure_transport: failed
 
+            confirmation:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: federation.out
+                        type: direct
+                    queues:
+                        response.queue:
+                            binding_keys:
+                                - ''
+
             failed: 'doctrine://default?queue_name=failed'
 
         failure_transport: failed

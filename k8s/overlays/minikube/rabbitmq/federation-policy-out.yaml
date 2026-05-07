@@ -1,0 +1,15 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Policy
+metadata:
+  name: federation-policy-out
+  namespace: distributed-rabbit
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  name: federation-policy-out
+  pattern: "^federation\\.out$"
+  applyTo: exchanges
+  definition:
+    federation-upstream: rabbit2-upstream
+  rabbitmqClusterReference:
+    name: rabbit1

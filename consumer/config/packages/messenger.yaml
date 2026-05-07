@@ -12,5 +12,13 @@ framework:
                             binding_keys:
                                 - ''
 
+            response:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: federation.out
+                        type: direct
+
         routing:
             App\Message\FederationMessage: consumer
+            App\Message\ConfirmationMessage: response

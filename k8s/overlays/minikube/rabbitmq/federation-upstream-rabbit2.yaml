@@ -1,0 +1,14 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Federation
+metadata:
+  name: rabbit2-upstream
+  namespace: distributed-rabbit
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  name: rabbit2-upstream
+  uriSecret:
+    name: rabbit2-amqp-uri
+  ackMode: on-confirm
+  rabbitmqClusterReference:
+    name: rabbit1
