@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: consumer-config
+  namespace: distributed-rabbit
+data:
+  MESSENGER_TRANSPORT_DSN: "amqp://guest:guest@rabbit2:5672/%2f"

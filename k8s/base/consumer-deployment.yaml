@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer
+  namespace: distributed-rabbit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumer
+  template:
+    metadata:
+      labels:
+        app: consumer
+    spec:
+      containers:
+        - name: consumer
+          image: consumer:latest
+          imagePullPolicy: Never
+          command: ["php", "bin/console", "messenger:consume", "consumer", "-vv"]
+          envFrom:
+            - configMapRef:
+                name: consumer-config
+          volumeMounts:
+            - name: log-volume
+              mountPath: /app/var/log
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+      volumes:
+        - name: log-volume
+          persistentVolumeClaim:
+            claimName: consumer-log-pvc

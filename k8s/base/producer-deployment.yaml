@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producer
+  namespace: distributed-rabbit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: producer
+  template:
+    metadata:
+      labels:
+        app: producer
+    spec:
+      containers:
+        - name: producer
+          image: producer:latest
+          imagePullPolicy: Never
+          command: ["sh", "-c", "while true; do sleep 3600; done"]
+          envFrom:
+            - configMapRef:
+                name: producer-config
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"

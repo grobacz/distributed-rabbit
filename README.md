@@ -140,6 +140,52 @@ curl -s -u guest:guest http://localhost:15673/api/federation-links | python3 -m 
 
 The link status should be `running`.
 
+## Kubernetes + ArgoCD Deployment
+
+The project includes Kubernetes manifests for running the federation demo on minikube, managed by ArgoCD in a GitOps workflow.
+
+### Deploy on minikube (Phase 1 — plain manifests)
+
+```bash
+# Start minikube
+minikube start --cpus=4 --memory=8192
+minikube addons enable ingress
+
+# Apply all resources
+kubectl apply -k k8s/overlays/minikube
+
+# Verify
+kubectl get pods -n distributed-rabbit
+
+# Produce a message
+kubectl exec -it deploy/producer -n distributed-rabbit -- php bin/console app:produce "hello k8s"
+
+# Check consumer logs
+kubectl logs -f deploy/consumer -n distributed-rabbit
+```
+
+### Install ArgoCD (Phase 2 — GitOps)
+
+```bash
+# Install ArgoCD
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+# Expose ArgoCD UI via Ingress (or use port-forward)
+kubectl apply -f k8s/overlays/minikube/argocd-ingress.yaml
+
+# Add argocd.local to /etc/hosts pointing at minikube IP
+# minikube ip
+
+# Bootstrap the App of Apps
+kubectl apply -f argocd/root-application.yaml
+
+# Retrieve initial admin password
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
+
+ArgoCD will now auto-sync any changes pushed to the `k8s/` manifests in this repository.
+
 ## Key Files
 
 | Path | Purpose |
@@ -148,6 +194,8 @@ The link status should be `running`.
 | `rabbitmq/setup/run.sh` | Automated federation configuration via HTTP API |
 | `rabbitmq/rabbit1/enabled_plugins` | Enables federation plugin on node 1 |
 | `rabbitmq/rabbit2/enabled_plugins` | Enables federation plugin on node 2 |
+| `k8s/` | Kubernetes manifests (deployments, services, jobs, ingress) |
+| `argocd/` | ArgoCD Application manifests for GitOps management |
 | `producer/src/Command/ProduceCommand.php` | CLI command `app:produce <text>` |
 | `producer/src/Message/FederationMessage.php` | Message DTO |
 | `producer/config/packages/messenger.yaml` | AMQP transport to `federation.in` on rabbit1 |

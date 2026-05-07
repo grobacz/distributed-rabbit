@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rabbitmq-ingress
+  namespace: distributed-rabbit
+spec:
+  rules:
+    - host: distributed-rabbit.local
+      http:
+        paths:
+          - path: /rabbit1
+            pathType: Prefix
+            backend:
+              service:
+                name: rabbit1
+                port:
+                  number: 15672
+          - path: /rabbit2
+            pathType: Prefix
+            backend:
+              service:
+                name: rabbit2
+                port:
+                  number: 15672
