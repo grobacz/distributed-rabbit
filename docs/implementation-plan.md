@@ -151,10 +151,10 @@ the repo.
 
 ### 2.4 Commit, push, verify
 
-- [ ] Commit all K8s + ArgoCD manifests.
-- [ ] `kubectl apply -f argocd/root-application.yaml` (bootstrap App of Apps).
-- [ ] UI shows all resources green, synced.
-- [ ] Prove GitOps loop: change a label in Git, push, ArgoCD auto-syncs.
+- [x] Commit all K8s + ArgoCD manifests.
+- [x] `kubectl apply -f argocd/root-application.yaml` (bootstrap App of Apps).
+- [x] UI shows all resources green, synced.
+- [x] Prove GitOps loop: change a label in Git, push, ArgoCD auto-syncs.
 
 ---
 
